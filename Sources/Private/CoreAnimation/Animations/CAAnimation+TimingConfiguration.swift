@@ -2,6 +2,7 @@
 // Copyright © 2022 Airbnb Inc. All rights reserved.
 
 import QuartzCore
+import AVFoundation
 
 extension CAAnimation {
   /// Creates a `CAAnimation` that wraps this animation,
@@ -64,6 +65,9 @@ extension CAAnimation {
       let currentTime = layer.convertTime(CACurrentMediaTime(), from: nil)
       clippingParent.beginTime = currentTime - .leastNonzeroMagnitude
     }
+      
+      context.logger.info("JB about to set beginTime on clippingParent from \(clippingParent.beginTime) to \(AVCoreAnimationBeginTimeAtZero)")
+      clippingParent.beginTime = AVCoreAnimationBeginTimeAtZero
 
     return clippingParent
   }
