@@ -12,12 +12,14 @@ public struct LottieConfiguration: Hashable {
     renderingEngine: RenderingEngineOption = .automatic,
     decodingStrategy: DecodingStrategy = .dictionaryBased,
     colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB(),
-    reducedMotionOption: ReducedMotionOption = .systemReducedMotionToggle)
+    reducedMotionOption: ReducedMotionOption = .systemReducedMotionToggle,
+    isVideo: Bool = false)
   {
     self.renderingEngine = renderingEngine
     self.decodingStrategy = decodingStrategy
     self.colorSpace = colorSpace
     self.reducedMotionOption = reducedMotionOption
+    self.isVideo = isVideo
   }
 
   // MARK: Public
@@ -44,4 +46,7 @@ public struct LottieConfiguration: Hashable {
   /// The color space to be used for rendering
   ///  - Defaults to `CGColorSpaceCreateDeviceRGB()`
   public var colorSpace: CGColorSpace
+  
+  /// This configuration is intended to back Lottie views that will be consumed by AVFoundation
+  public var isVideo: Bool
 }

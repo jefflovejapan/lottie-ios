@@ -1201,7 +1201,8 @@ public class LottieAnimationLayer: CALayer {
         imageProvider: imageProvider.cachedImageProvider,
         textProvider: textProvider,
         fontProvider: fontProvider,
-        maskAnimationToBounds: maskAnimationToBounds,
+        maskAnimationToBounds: maskAnimationToBounds, 
+        isVideo: configuration.isVideo,
         compatibilityTrackerMode: .track,
         logger: logger)
 
@@ -1237,7 +1238,8 @@ public class LottieAnimationLayer: CALayer {
         imageProvider: imageProvider.cachedImageProvider,
         textProvider: textProvider,
         fontProvider: fontProvider,
-        maskAnimationToBounds: maskAnimationToBounds,
+        maskAnimationToBounds: maskAnimationToBounds, 
+        isVideo: configuration.isVideo,
         compatibilityTrackerMode: .abort,
         logger: logger)
 
@@ -1364,7 +1366,7 @@ public class LottieAnimationLayer: CALayer {
       var timingConfiguration = CoreAnimationLayer.CAMediaTimingConfiguration(
         autoreverses: loopMode.caAnimationConfiguration.autoreverses,
         repeatCount: loopMode.caAnimationConfiguration.repeatCount,
-        speed: abs(Float(animationSpeed)))
+        speed: abs(Float(animationSpeed)), isVideo: coreAnimationLayer.isVideo)
 
       // The animation should start playing from the `currentFrame`,
       // if `currentFrame` is included in the time range being played.

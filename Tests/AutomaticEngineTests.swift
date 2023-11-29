@@ -30,7 +30,8 @@ final class AutomaticEngineTests: XCTestCase {
         imageProvider: BundleImageProvider(bundle: Bundle.main, searchPath: nil),
         textProvider: DefaultTextProvider(),
         fontProvider: DefaultFontProvider(),
-        maskAnimationToBounds: true,
+        maskAnimationToBounds: true, 
+        isVideo: false,
         compatibilityTrackerMode: .track,
         logger: .shared))
 

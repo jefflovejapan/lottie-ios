@@ -36,7 +36,7 @@ final class ValueProvidersTests: XCTestCase {
     let store = ValueProviderStore(logger: .printToConsole)
     let animationContext = LayerAnimationContext(
       animation: animation,
-      timingConfiguration: .init(),
+      timingConfiguration: .init(isVideo: false),
       startFrame: 0,
       endFrame: 100,
       valueProviderStore: store,

@@ -61,13 +61,13 @@ extension CAAnimation {
     //    is not applied correctly without this configuration.
     //  - We can't do this when playing the animation in real time,
     //    because it can cause keyframe timings to be incorrect.
+    
     if context.timingConfiguration.speed == 0 {
       let currentTime = layer.convertTime(CACurrentMediaTime(), from: nil)
       clippingParent.beginTime = currentTime - .leastNonzeroMagnitude
+    } else if context.timingConfiguration.isVideo {
+        clippingParent.beginTime = AVCoreAnimationBeginTimeAtZero
     }
-      
-      context.logger.info("JB about to set beginTime on clippingParent from \(clippingParent.beginTime) to \(AVCoreAnimationBeginTimeAtZero)")
-      clippingParent.beginTime = AVCoreAnimationBeginTimeAtZero
 
     return clippingParent
   }

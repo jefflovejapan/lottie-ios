@@ -20,6 +20,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
     textProvider: AnimationKeypathTextProvider,
     fontProvider: AnimationFontProvider,
     maskAnimationToBounds: Bool,
+    isVideo: Bool,
     compatibilityTrackerMode: CompatibilityTracker.Mode,
     logger: LottieLogger)
     throws
@@ -31,6 +32,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
     self.logger = logger
     compatibilityTracker = CompatibilityTracker(mode: compatibilityTrackerMode, logger: logger)
     valueProviderStore = ValueProviderStore(logger: logger)
+    self.isVideo = isVideo
     super.init()
     masksToBounds = maskAnimationToBounds
     setup()
@@ -53,6 +55,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
     compatibilityTracker = typedLayer.compatibilityTracker
     logger = typedLayer.logger
     valueProviderStore = typedLayer.valueProviderStore
+    isVideo = typedLayer.isVideo
     super.init(layer: typedLayer)
   }
 
@@ -69,6 +72,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
     var repeatCount: Float = 0
     var speed: Float = 1
     var timeOffset: TimeInterval = 0
+    var isVideo: Bool
   }
 
   enum PlaybackState: Equatable {
@@ -210,6 +214,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
   private let compatibilityTracker: CompatibilityTracker
   private let logger: LottieLogger
   private let loggingState = LoggingState()
+  let isVideo: Bool
 
   /// The current playback state of the animation that is displayed in this layer
   private var currentPlaybackState: PlaybackState? {
@@ -389,7 +394,7 @@ extension CoreAnimationLayer: RootAnimationLayer {
           playFrom: animation.startFrame,
           playTo: animation.endFrame,
           closure: nil),
-        timingConfiguration: CAMediaTimingConfiguration(speed: 0))
+        timingConfiguration: CAMediaTimingConfiguration(speed: 0, isVideo: isVideo))
 
       if
         pendingAnimationConfiguration == nil,
