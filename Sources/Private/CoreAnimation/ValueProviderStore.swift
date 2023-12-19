@@ -36,8 +36,7 @@ final class ValueProviderStore {
       properties. Supported properties are: \(supportedProperties.joined(separator: ", ")).
       """)
 
-    valueProviders.removeAll(where: { $0.keypath == keypath })
-    valueProviders.append((keypath: keypath, valueProvider: valueProvider))
+      valueProviders[keypath.fullPath] = valueProvider
   }
 
   // Retrieves the custom value keyframes for the given property,
@@ -96,17 +95,18 @@ final class ValueProviderStore {
   // MARK: Private
 
   private let logger: LottieLogger
-  private var valueProviders = [(keypath: AnimationKeypath, valueProvider: AnyValueProvider)]()
+//  private var valueProviders = [(keypath: AnimationKeypath, valueProvider: AnyValueProvider)]()
+    private var valueProviders: [String: AnyValueProvider] = [:]
 
   /// Retrieves the most-recently-registered Value Provider that matches the given keypath.
   private func valueProvider(for keypath: AnimationKeypath) -> AnyValueProvider? {
     // Find the last keypath matching the given keypath,
     // so we return the value provider that was registered most-recently
-    valueProviders.last(where: { registeredKeypath, _ in
-      keypath.matches(registeredKeypath)
-    })?.valueProvider
+//    valueProviders.last(where: { registeredKeypath, _ in
+//      keypath.exactMatches(registeredKeypath)
+//    })?.valueProvider
+      valueProviders[keypath.fullPath]
   }
-
 }
 
 extension AnyValueProviderStorage {
@@ -125,27 +125,31 @@ extension AnyValueProviderStorage {
 extension AnimationKeypath {
   /// Whether or not this keypath from the animation hierarchy
   /// matches the given keypath (which may contain wildcards)
-  func matches(_ keypath: AnimationKeypath) -> Bool {
-    var regex = "^" // match the start of the string
-      + keypath.keys.joined(separator: "\\.") // match this keypath, escaping "." characters
-      + "$" // match the end of the string
-
-    // Replace the ** and * wildcards with markers that are guaranteed to be unique
-    // and won't conflict with regex syntax (e.g. `.*`).
-    let doubleWildcardMarker = UUID().uuidString
-    let singleWildcardMarker = UUID().uuidString
-    regex = regex.replacingOccurrences(of: "**", with: doubleWildcardMarker)
-    regex = regex.replacingOccurrences(of: "*", with: singleWildcardMarker)
-
-    // "**" wildcards match zero or more path segments separated by "\\."
-    //  - "**.Color" matches any of "Color", "Layer 1.Color", and "Layer 1.Layer 2.Color"
-    regex = regex.replacingOccurrences(of: "\(doubleWildcardMarker)\\.", with: ".*")
-    regex = regex.replacingOccurrences(of: doubleWildcardMarker, with: ".*")
-
-    // "*" wildcards match exactly one path component
-    //  - "*.Color" matches "Layer 1.Color" but not "Layer 1.Layer 2.Color"
-    regex = regex.replacingOccurrences(of: singleWildcardMarker, with: "[^.]+")
-
-    return fullPath.range(of: regex, options: .regularExpression) != nil
-  }
+//  func matches(_ keypath: AnimationKeypath) -> Bool {
+//    var regex = "^" // match the start of the string
+//      + keypath.keys.joined(separator: "\\.") // match this keypath, escaping "." characters
+//      + "$" // match the end of the string
+//
+//    // Replace the ** and * wildcards with markers that are guaranteed to be unique
+//    // and won't conflict with regex syntax (e.g. `.*`).
+//    let doubleWildcardMarker = UUID().uuidString
+//    let singleWildcardMarker = UUID().uuidString
+//    regex = regex.replacingOccurrences(of: "**", with: doubleWildcardMarker)
+//    regex = regex.replacingOccurrences(of: "*", with: singleWildcardMarker)
+//
+//    // "**" wildcards match zero or more path segments separated by "\\."
+//    //  - "**.Color" matches any of "Color", "Layer 1.Color", and "Layer 1.Layer 2.Color"
+//    regex = regex.replacingOccurrences(of: "\(doubleWildcardMarker)\\.", with: ".*")
+//    regex = regex.replacingOccurrences(of: doubleWildcardMarker, with: ".*")
+//
+//    // "*" wildcards match exactly one path component
+//    //  - "*.Color" matches "Layer 1.Color" but not "Layer 1.Layer 2.Color"
+//    regex = regex.replacingOccurrences(of: singleWildcardMarker, with: "[^.]+")
+//
+//    return fullPath.range(of: regex, options: .regularExpression) != nil
+//  }
+    
+    func exactMatches(_ keypath: AnimationKeypath) -> Bool {
+        return fullPath == keypath.keys.joined(separator: ".")
+    }
 }
